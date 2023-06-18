@@ -1,0 +1,52 @@
+[
+  {
+    "name": "Espresso",
+    "lines": [
+      [
+        {
+          "latitude": "49.35875",
+          "longitude": "-123.05274"
+        },
+        {
+          "latitude": "49.35873",
+          "longitude": "-123.05235"
+        }
+      ],
+      [
+        {
+          "latitude": "49.35011",
+          "longitude": "-123.05316"
+        },
+        {
+          "latitude": "49.35022",
+          "longitude": "-123.05280"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "Segment with two laps",
+    "lines": [
+      [
+        {
+          "latitude": 49.351897602132794,
+          "longitude": -123.06188117258688
+        },
+        {
+          "latitude": 49.35164986524338,
+          "longitude": -123.0627241886816
+        }
+      ],
+      [
+        {
+          "latitude": 49.35404295139656,
+          "longitude": -123.06726647207549
+        },
+        {
+          "latitude": 49.353677276043946,
+          "longitude": -123.06797967343104
+        }
+      ]
+    ]
+  }
+]
