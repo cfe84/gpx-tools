@@ -15,10 +15,11 @@ describe('Segment finder', () => {
     const segments = segmentFinder.identifySegments(trace);
 
     // then
-    should(segments).have.lengthOf(3);
+    should(segments).have.lengthOf(4);
 
     const segmentsToFind = [
       { name: "Segment with two laps", legs: 1, timeInSeconds: 390 },
+      { name: "Climbing trail with three legs", legs: 3, timeInSeconds: 4145 },
       { name: "Espresso", legs: 1, timeInSeconds: 485 },
       { name: "Segment with two laps", legs: 1, timeInSeconds: 234 },
     ]
