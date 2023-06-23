@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "echo Build && tsc && echo Done",
     "clean": "rimraf dist/",
     "start": "npm run build && node dist/index.js",
     "test": "mocha --require ts-node/register test/**/*.test.ts"
@@ -26,6 +26,7 @@
   "dependencies": {
     "@types/luxon": "^3.3.0",
     "command-line-usage": "^7.0.1",
+    "csv-stringify": "^6.4.0",
     "gpx-parser-ts": "^1.0.7",
     "luxon": "^3.3.0",
     "mocha": "^10.2.0",

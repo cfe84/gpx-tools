@@ -3,9 +3,14 @@ import { GeoCalculator } from "./GeoCalculator";
 import { FileLoader } from "./FileLoader";
 import { Point } from "./Point";
 import { SegmentFinder } from "./SegmentFinder";
+import { Trace } from "./Trace";
+import { IRenderer } from "./IRenderer";
+import { Result } from "./Result";
+import { Segment } from "./Segment";
 
 export interface AppDeps {
   loader: FileLoader,
+  renderer: IRenderer,
 }
 
 export class App {
@@ -13,31 +18,31 @@ export class App {
   constructor(private deps: AppDeps) { }
 
   async runAsync(configuration: Configuration) {
-    const trace = await this.deps.loader.loadGpxAsync(configuration.file);
-    if (configuration.stats) {
-      await this.statsAsync(trace);
+    let traces: Trace[] = [];
+    if (configuration.file) {
+      traces = [await this.deps.loader.loadGpxAsync(configuration.file)];
+    } else if (configuration.folder) {
+      traces = await this.deps.loader.loadFolderAsync(configuration.folder);
     }
-    if (configuration.segmentsFile) {
-      await this.segmentsAsync(configuration.segmentsFile, trace);
+    const results = [];
+    for (const trace of traces) {
+      const result: Result = {
+        segments: [],
+        trace,
+      };
+      if (configuration.segmentsFile) {
+        result.segments = await this.segmentsAsync(configuration.segmentsFile, trace);
+      }
+      results.push(result);
     }
+    this.deps.renderer.render(results);
   }
 
-  private async segmentsAsync(segmentsFile: string, trace: Point[]) {
+  private async segmentsAsync(segmentsFile: string, trace: Trace): Promise<Segment[]> {
     const segmentDefinitions = await this.deps.loader.loadSegmentsAsync(segmentsFile);
     const segmentFinder = new SegmentFinder(segmentDefinitions);
     const segments = segmentFinder.identifySegments(trace);
-    segments.forEach((segment, i) => {
-      console.log(`Segment ${i + 1}: ${segment.segmentDefinition.name}`);
-      this.statsAsync(segment.points);
-    });
+    return segments;
   }
 
-  private async statsAsync(trace: Point[]) {
-    const distanceInKm = GeoCalculator.calculateTotalDistanceInMeters(trace) / 1000;
-    const duration = GeoCalculator.calculateDuration(trace);
-    const speedInKph = distanceInKm / duration.as("hours");
-    console.log(`Distance: ${Math.round(distanceInKm * 100) / 100}km`);
-    console.log(`Duration: ${duration.toFormat("h:mm:ss")}`);
-    console.log(`Average speed: ${Math.round(speedInKph * 100) / 100}km/h`);
-  }
 }

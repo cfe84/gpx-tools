@@ -1,9 +1,9 @@
-import { DateTime, Duration } from "luxon";
+import { Duration } from "luxon";
 import { GeoCalculator } from "./GeoCalculator";
 import { Line } from "./Line";
-import { Point } from "./Point";
 import { Segment } from "./Segment";
 import { SegmentDefinition } from "./SegmentDefinition";
+import { Trace } from "./Trace";
 
 export interface SegmentReader {
   index: number;
@@ -24,8 +24,9 @@ function newSegment(segmentDefinition: SegmentDefinition) {
 export class SegmentFinder {
   constructor(private segmentDefinitions: SegmentDefinition[]) { }
 
-  identifySegments(points: Point[]): Segment[] {
+  identifySegments(trace: Trace): Segment[] {
     let segments: Segment[] = [];
+    const points = trace.points;
     let segmentReaders: SegmentReader[] = this.segmentDefinitions.map(segmentDefinition => ({
       index: 0,
       segment: newSegment(segmentDefinition),
