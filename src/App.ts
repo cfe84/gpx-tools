@@ -1,10 +1,8 @@
 import { Configuration } from "./Configuration";
-import { GeoCalculator } from "./GeoCalculator";
 import { FileLoader } from "./FileLoader";
-import { Point } from "./Point";
 import { SegmentFinder } from "./SegmentFinder";
 import { Trace } from "./Trace";
-import { IRenderer } from "./IRenderer";
+import { IRenderer } from "./rendering/IRenderer";
 import { Result } from "./Result";
 import { Segment } from "./Segment";
 

@@ -1,23 +1,20 @@
-import { stringify } from "csv-stringify/sync";
-import { Configuration } from "./Configuration";
-import { IRenderer } from "./IRenderer";
-import { Result } from "./Result";
-import { RouteStats } from "./RouteStats";
-import { Segment } from "./Segment";
+import { Configuration } from "../Configuration";
+import { Result } from "../Result";
+import { RouteStats } from "../RouteStats";
+import { Segment } from "../Segment";
 
-export class CsvRenderer implements IRenderer {
+export class TablePreRenderer {
   constructor(private configuration: Configuration) {
-
   }
 
-  render(results: Result[]): void {
+  makeTable(results: Result[]): string[][] {
     const rows = [this.headers()];
     results.forEach(result => {
       if (this.configuration.segmentsFile) {
         this.renderSegments(result.segments).forEach(segmentRow => rows.push(segmentRow));
       }
     });
-    console.log(stringify(rows));
+    return rows;
   }
 
   private headers() {
@@ -37,4 +34,5 @@ export class CsvRenderer implements IRenderer {
       ]
     });
   }
+
 }

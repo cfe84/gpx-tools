@@ -1,10 +1,8 @@
-import { Configuration } from "./Configuration";
-import { GeoCalculator } from "./GeoCalculator";
+import { Configuration } from "../Configuration";
 import { IRenderer } from "./IRenderer";
-import { Point } from "./Point";
-import { Result } from "./Result";
-import { RouteStats } from "./RouteStats";
-import { Segment } from "./Segment";
+import { Result } from "../Result";
+import { RouteStats } from "../RouteStats";
+import { Segment } from "../Segment";
 
 export class ConsoleRenderer implements IRenderer {
   constructor(private configuration: Configuration) { }

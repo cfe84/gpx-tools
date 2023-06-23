@@ -1,4 +1,4 @@
-export type OutputType = "text" | "csv";
+export type OutputType = "text" | "csv" | "table";
 
 export interface Configuration {
   file?: string,

@@ -40,7 +40,7 @@ export class ConfigurationProvider {
         name: "output",
         alias: "o",
         type: String,
-        description: "Output type (csv, text)"
+        description: "Output type (csv, text, table)"
       }
     ];
 
@@ -85,7 +85,7 @@ export class ConfigurationProvider {
     const stats = !!commands["stats"];
     const output = getCommandValue("output") || "text";
 
-    if (["csv", "text"].indexOf(output) < 0) {
+    if (["csv", "text", "table"].indexOf(output) < 0) {
       console.error(`Invalid output: ${output}`);
       displayHelp();
       process.exit(1);
