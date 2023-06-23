@@ -2,13 +2,14 @@ import { Configuration } from "../Configuration";
 import { Result } from "../Result";
 import { RouteStats } from "../RouteStats";
 import { Segment } from "../Segment";
+import * as path from "path";
 
 export class TablePreRenderer {
   constructor(private configuration: Configuration) {
   }
 
   makeTable(results: Result[]): string[][] {
-    let rows = results.flatMap(result => this.renderSegments(result.segments));
+    let rows = results.flatMap(result => this.renderSegments(result.trace.filename, result.segments));
     rows = this.sortRows(rows);
     rows.splice(0, 0, this.headers());
     return rows;
@@ -29,18 +30,29 @@ export class TablePreRenderer {
   }
 
   private headers() {
-    return ["date", "segment", "distance", "duration", "durationInS", "averageSpeedInKph", "elevationGain", "elevationLoss", "highestPoint", "lowestPoint"];
+    return [
+      // "file", 
+      "date",
+      "segment",
+      "distance",
+      "duration",
+      "averageSpeedInKph",
+      "elevationGain",
+      "elevationLoss",
+      "highestPoint",
+      "lowestPoint",
+    ];
   }
 
-  private renderSegments(segments: Segment[]): any[] {
+  private renderSegments(file: string, segments: Segment[]): any[] {
     let rows = segments.map((segment, i) => {
       const stats = new RouteStats(segment.points);
       return [
+        // path.basename(file),
         segment.points[0].time.toISODate(),
         segment.segmentDefinition.name,
         stats.distanceInKm,
         stats.durationAsString,
-        stats.duration.as("seconds"),
         stats.averageSpeedInKph,
         stats.elevation.up,
         stats.elevation.down,
