@@ -1,7 +1,7 @@
 import * as usage from "command-line-usage";
 import { parseCommandLine, ParsingResult } from "yaclip";
 
-import { Configuration } from "./Configuration";
+import { Configuration, OutputType } from "./Configuration";
 
 export class ConfigurationProvider {
   static loadConfiguration(): Configuration {
@@ -11,6 +11,12 @@ export class ConfigurationProvider {
         alias: "f",
         type: String,
         description: "Path to GPX file to load",
+      },
+      {
+        name: "folder",
+        alias: "F",
+        type: String,
+        description: "Path to folder with GPX files to load",
       },
       {
         name: "help",
@@ -30,6 +36,12 @@ export class ConfigurationProvider {
         type: Boolean,
         description: "Print stats",
       },
+      {
+        name: "output",
+        alias: "o",
+        type: String,
+        description: "Output type (csv, text)"
+      }
     ];
 
     function displayHelp() {
@@ -67,9 +79,17 @@ export class ConfigurationProvider {
         : null;
     }
 
-    const file = getCommandValue("file");
+    const file = getCommandValue("file") || undefined;
+    const folder = getCommandValue("folder") || undefined;
     const segmentsFile = getCommandValue("segments") || null;
     const stats = !!commands["stats"];
+    const output = getCommandValue("output") || "text";
+
+    if (["csv", "text"].indexOf(output) < 0) {
+      console.error(`Invalid output: ${output}`);
+      displayHelp();
+      process.exit(1);
+    }
 
     const checkVariable = (variable: any, message: string) => {
       if (!variable) {
@@ -79,12 +99,12 @@ export class ConfigurationProvider {
       }
     };
 
-    checkVariable(file, "File missing");
-
     return {
-      file: file as string,
+      file: file || undefined,
+      folder: folder || undefined,
       segmentsFile,
       stats,
+      output: output as OutputType,
     };
   }
 
