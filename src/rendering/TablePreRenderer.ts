@@ -8,21 +8,32 @@ export class TablePreRenderer {
   }
 
   makeTable(results: Result[]): string[][] {
-    const rows = [this.headers()];
-    results.forEach(result => {
-      if (this.configuration.segmentsFile) {
-        this.renderSegments(result.segments).forEach(segmentRow => rows.push(segmentRow));
+    let rows = results.flatMap(result => this.renderSegments(result.segments));
+    rows = this.sortRows(rows);
+    rows.splice(0, 0, this.headers());
+    return rows;
+  }
+
+  private sortRows(rows: any[][]) {
+    if (this.configuration.sort) {
+      const headers = this.headers();
+      const index = headers.indexOf(this.configuration.sort);
+      if (index < 0) {
+        throw Error("Unknown column: " + this.configuration.sort);
       }
-    });
+      rows = rows.sort((a, b) => typeof (a[index]) === "number"
+        ? (a[index] as number) - (b[index] as number)
+        : `${a[index]}`.localeCompare(`${b[index]}`));
+    }
     return rows;
   }
 
   private headers() {
-    return ["date", "segment", "distance", "duration", "durationInS", "averageSpeedInKph"];
+    return ["date", "segment", "distance", "duration", "durationInS", "averageSpeedInKph", "elevationGain", "elevationLoss", "highestPoint", "lowestPoint"];
   }
 
   private renderSegments(segments: Segment[]): any[] {
-    return segments.map((segment, i) => {
+    let rows = segments.map((segment, i) => {
       const stats = new RouteStats(segment.points);
       return [
         segment.points[0].time.toISODate(),
@@ -31,8 +42,14 @@ export class TablePreRenderer {
         stats.durationAsString,
         stats.duration.as("seconds"),
         stats.averageSpeedInKph,
+        stats.elevation.up,
+        stats.elevation.down,
+        stats.elevation.top,
+        stats.elevation.bottom,
       ]
     });
+
+    return rows;
   }
 
 }

@@ -41,6 +41,12 @@ export class ConfigurationProvider {
         alias: "o",
         type: String,
         description: "Output type (csv, text, table)"
+      },
+      {
+        name: "sort",
+        alias: "S",
+        type: String,
+        description: "Sort column works for table-based renderings (csv, table)"
       }
     ];
 
@@ -83,6 +89,7 @@ export class ConfigurationProvider {
     const folder = getCommandValue("folder") || undefined;
     const segmentsFile = getCommandValue("segments") || null;
     const stats = !!commands["stats"];
+    const sort = getCommandValue("sort") || undefined;
     const output = getCommandValue("output") || "text";
 
     if (["csv", "text", "table"].indexOf(output) < 0) {
@@ -105,6 +112,7 @@ export class ConfigurationProvider {
       segmentsFile,
       stats,
       output: output as OutputType,
+      sort,
     };
   }
 

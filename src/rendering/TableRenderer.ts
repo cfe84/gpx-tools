@@ -10,6 +10,10 @@ function pad(str: string, length: number, pad: string) {
   return str;
 }
 
+function round(val: number): number {
+  return Math.round(val * 100) / 100;
+}
+
 export class TableRenderer implements IRenderer {
   private tablePreRenderer: TablePreRenderer;
   constructor(private configuration: Configuration) {
@@ -17,7 +21,7 @@ export class TableRenderer implements IRenderer {
   }
 
   render(results: Result[]): void {
-    const rows = this.tablePreRenderer.makeTable(results);
+    const rows = this.tablePreRenderer.makeTable(results).map(row => row.map(col => typeof (col) === "number" ? round(col) : col));
     const widths = rows[0].map(_ => 0);
     const sep = rows[0].map(_ => "-");
     rows.splice(1, 0, sep);

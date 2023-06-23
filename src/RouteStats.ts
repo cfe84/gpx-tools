@@ -1,6 +1,7 @@
 import { Duration } from "luxon";
 import { GeoCalculator } from "./GeoCalculator";
 import { Point } from "./Point";
+import { Elevation } from "./Elevation";
 
 export class RouteStats {
   public distanceInKm: number;
@@ -9,6 +10,7 @@ export class RouteStats {
   public durationAsString: string;
   public averageSpeedInKph: number;
   public roundedAverageSpeedInKph: number;
+  public elevation: Elevation;
 
   constructor(public points: Point[]) {
     this.distanceInKm = GeoCalculator.calculateTotalDistanceInMeters(points) / 1000;
@@ -17,5 +19,6 @@ export class RouteStats {
     this.durationAsString = this.duration.toFormat("h:mm:ss");
     this.averageSpeedInKph = this.distanceInKm / this.duration.as("hours");
     this.roundedAverageSpeedInKph = Math.round(this.averageSpeedInKph * 100) / 100;
+    this.elevation = GeoCalculator.calculateElevation(points);
   }
 }

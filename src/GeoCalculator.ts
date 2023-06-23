@@ -1,6 +1,7 @@
 import { Duration } from "luxon";
 import { Point } from "./Point";
 import { Line } from "./Line";
+import { Elevation } from "./Elevation";
 
 export class GeoCalculator {
   static calculateTotalDistanceInMeters(points: Point[]): number {
@@ -26,6 +27,37 @@ export class GeoCalculator {
       Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return earthRadiusKm * c;
+  }
+
+  static calculateElevation(points: Point[]): Elevation {
+    const res: Elevation = {
+      up: 0,
+      down: 0,
+      top: Number.NEGATIVE_INFINITY,
+      bottom: Number.POSITIVE_INFINITY
+    };
+    if (points.length === 0) {
+      return res;
+    }
+    let prevPoint = points[0];
+    res.bottom = res.top = prevPoint.elevation;
+    for (let i = 1; i < points.length; i++) {
+      const point = points[i];
+      const diff = point.elevation - prevPoint.elevation;
+      if (diff > 0) {
+        res.up += diff;
+      } else {
+        res.down -= diff;
+      }
+      if (point.elevation > res.top) {
+        res.top = point.elevation;
+      }
+      if (point.elevation < res.bottom) {
+        res.bottom = point.elevation;
+      }
+      prevPoint = point;
+    }
+    return res;
   }
 
   static calculateDistanceBetweenPointsInMeters(
