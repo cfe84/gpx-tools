@@ -9,6 +9,7 @@
     "start": "npm run build && node dist/index.js",
     "test": "mocha --require ts-node/register test/**/*.test.ts"
   },
+  "repository": "github:cfe84/gpx-tools",
   "author": "",
   "license": "ISC",
   "devDependencies": {
